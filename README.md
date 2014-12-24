@@ -1,7 +1,7 @@
 Docker Backup to Amazon S3
 ===================
 
-Docker container that backups files to Amazon S3 using [s3cmd sync](http://s3tools.org/s3cmd-sync). It doesn't upload files that has already been uploaded to S3. Upload happens once per day at noon.
+Docker container that periodically backups files to Amazon S3 using [s3cmd sync](http://s3tools.org/s3cmd-sync) and cron.
 
 ### Usage
 
