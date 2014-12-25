@@ -1,4 +1,5 @@
 FROM ubuntu:14.04
+MAINTAINER Ilya Stepanov <dev@ilyastepanov.com>
 
 RUN apt-get update && \
     apt-get install -y s3cmd cron && \
