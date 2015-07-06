@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 ACCESS_KEY=${ACCESS_KEY:?"ACCESS_KEY env variable is required"}
 SECRET_KEY=${SECRET_KEY:?"SECRET_KEY env variable is required"}
 S3_PATH=${S3_PATH:?"S3_PATH env variable is required"}
