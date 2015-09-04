@@ -2,8 +2,10 @@ FROM ubuntu:14.04
 MAINTAINER Ilya Stepanov <dev@ilyastepanov.com>
 
 RUN apt-get update && \
-    apt-get install -y s3cmd cron && \
+    apt-get install -y python python-pip cron && \
     rm -rf /var/lib/apt/lists/*
+
+RUN pip install s3cmd
 
 ADD s3cfg /root/.s3cfg
 
