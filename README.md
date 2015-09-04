@@ -16,6 +16,7 @@ Docker container that periodically backups files to Amazon S3 using [s3cmd sync]
 
 ### Optional parameters:
 
+* `-e PARAMS="--dry-run"`: parameters to pass to the sync command ([full list here](http://s3tools.org/usage)).
 * `-e DATA_PATH=/data/`: container's data folder. Default is `/data/`. Should end with trailing slash.
 * `-e 'CRON_SCHEDULE=0 1 * * *'`: specifies when cron job starts ([details](http://en.wikipedia.org/wiki/Cron)). Default is `0 1 * * *` (runs every day at 1:00 am).
 * `no-cron`: run container once and exit (no cron scheduling).
@@ -24,19 +25,27 @@ Docker container that periodically backups files to Amazon S3 using [s3cmd sync]
 
 Run upload to S3 everyday at 12:00pm:
 
-    docker run -d \
-    	-e ACCESS_KEY=myawskey \
+		docker run -d \
+		-e ACCESS_KEY=myawskey \
 		-e SECRET_KEY=myawssecret \
 		-e S3_PATH=s3://my-bucket/backup/ \
-		-e 'CRON_SCHEDULE=0 12 * * *' \
+		-e CRON_SCHEDULE=0 12 * * * \
 		-v /home/user/data:/data:ro	 \	
 		istepanov/backup-to-s3				
 
 Run once then delete the container:
 
-    docker run --rm \
-    	-e ACCESS_KEY=myawskey \
+		docker run --rm \
+			-e ACCESS_KEY=myawskey \
 		-e SECRET_KEY=myawssecret \
 		-e S3_PATH=s3://my-bucket/backup/ \
 		-v /home/user/data:/data:ro	 \	
 		istepanov/backup-to-s3 no-cron
+
+Run once to delete from s3 then delete the container:
+
+		docker run --rm \
+		-e ACCESS_KEY=myawskey \
+		-e SECRET_KEY=myawssecret \
+		-e S3_PATH=s3://my-bucket/backup/ \
+		istepanov/backup-to-s3 delete
