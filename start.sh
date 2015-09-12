@@ -18,6 +18,8 @@ elif [[ "$1" == 'delete' ]]; then
     exec /usr/bin/s3cmd del -r "$S3_PATH"
 else
     touch /var/log/cron.log
+    echo "$CRON_SCHEDULE /usr/bin/s3cmd sync $PARAMS \"$DATA_PATH\" \"$S3_PATH\" >> /var/log/cron.log 2>&1"
     echo "$CRON_SCHEDULE /usr/bin/s3cmd sync $PARAMS \"$DATA_PATH\" \"$S3_PATH\" >> /var/log/cron.log 2>&1" | crontab -
-    exec cron -f
+    cron
+    tail -f /var/log/cron.log
 fi
