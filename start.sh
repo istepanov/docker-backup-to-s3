@@ -17,9 +17,12 @@ if [[ "$1" == 'no-cron' ]]; then
 elif [[ "$1" == 'delete' ]]; then
     exec /usr/bin/s3cmd del -r "$S3_PATH"
 else
-    touch /var/log/cron.log
-    echo "$CRON_SCHEDULE /usr/bin/s3cmd sync $PARAMS \"$DATA_PATH\" \"$S3_PATH\" >> /var/log/cron.log 2>&1"
-    echo "$CRON_SCHEDULE /usr/bin/s3cmd sync $PARAMS \"$DATA_PATH\" \"$S3_PATH\" >> /var/log/cron.log 2>&1" | crontab -
+    LOGFIFO='/var/log/cron.fifo'
+    if [[ ! -e "$LOGFIFO" ]]; then
+        mkfifo "$LOGFIFO"
+    fi
+    echo "$CRON_SCHEDULE /usr/bin/s3cmd sync $PARAMS \"$DATA_PATH\" \"$S3_PATH\" > $LOGFIFO 2>&1"
+    echo "$CRON_SCHEDULE /usr/bin/s3cmd sync $PARAMS \"$DATA_PATH\" \"$S3_PATH\" > $LOGFIFO 2>&1" | crontab -
     cron
-    tail -f /var/log/cron.log
+    tail -f "$LOGFIFO"
 fi
