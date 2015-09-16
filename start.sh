@@ -13,15 +13,15 @@ echo "access_key=$ACCESS_KEY" >> /root/.s3cfg
 echo "secret_key=$SECRET_KEY" >> /root/.s3cfg
 
 if [[ "$1" == 'no-cron' ]]; then
-    exec /usr/bin/s3cmd sync $PARAMS "$DATA_PATH" "$S3_PATH"
+    exec /usr/local/bin/s3cmd sync $PARAMS "$DATA_PATH" "$S3_PATH"
 elif [[ "$1" == 'delete' ]]; then
-    exec /usr/bin/s3cmd del -r "$S3_PATH"
+    exec /usr/local/bin/s3cmd del -r "$S3_PATH"
 else
     LOGFIFO='/var/log/cron.fifo'
     if [[ ! -e "$LOGFIFO" ]]; then
         mkfifo "$LOGFIFO"
     fi
-    echo "$CRON_SCHEDULE { echo \"\$(date +%Y/%m/%d %H:%M:%S)\"; /usr/bin/s3cmd sync $PARAMS \"$DATA_PATH\" \"$S3_PATH\"; } > $LOGFIFO 2>&1" | crontab -
+    echo "$CRON_SCHEDULE { echo \"\$(date '+%Y/%m/%d %H:%M:%S')\"; /usr/local/bin/s3cmd sync $PARAMS \"$DATA_PATH\" \"$S3_PATH\"; } > $LOGFIFO 2>&1" | crontab -
     crontab -l
     cron
     tail -f "$LOGFIFO"
