@@ -5,8 +5,14 @@ set -e
 : ${ACCESS_KEY:?"ACCESS_KEY env variable is required"}
 : ${SECRET_KEY:?"SECRET_KEY env variable is required"}
 : ${S3_PATH:?"S3_PATH env variable is required"}
+: ${GIT_REPO:?"GIT_REPO env variable is required"}
+
 export DATA_PATH=${DATA_PATH:-/data/}
 CRON_SCHEDULE=${CRON_SCHEDULE:-0 1 * * *}
+
+rm -rf /data
+git clone $GIT_REPO /data
+rm -rf /data/.git
 
 echo "access_key=$ACCESS_KEY" >> /root/.s3cfg
 echo "secret_key=$SECRET_KEY" >> /root/.s3cfg
