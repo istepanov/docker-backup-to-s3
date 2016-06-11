@@ -42,6 +42,15 @@ Run once then delete the container:
         -v /home/user/data:/data:ro \
         istepanov/backup-to-s3 no-cron
 
+Run once to get from S3 then delete the container:
+
+    docker run --rm \
+        -e ACCESS_KEY=myawskey \
+        -e SECRET_KEY=myawssecret \
+        -e S3_PATH=s3://my-bucket/backup/ \
+        -v /home/user/data:/data:rw \
+        istepanov/backup-to-s3 get
+
 Run once to delete from s3 then delete the container:
 
     docker run --rm \
