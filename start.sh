@@ -14,7 +14,7 @@ echo "secret_key=$SECRET_KEY" >> /root/.s3cfg
 if [[ "$1" == 'no-cron' ]]; then
     exec /sync.sh
 elif [[ "$1" == 'get' ]]; then
-    exec /usr/local/bin/s3cmd get -r $PARAMS  "$S3_PATH" "$DATA_PATH"
+    exec /get.sh
 elif [[ "$1" == 'delete' ]]; then
     exec /usr/local/bin/s3cmd del -r "$S3_PATH"
 else
