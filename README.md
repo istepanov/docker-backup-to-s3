@@ -58,3 +58,5 @@ Run once to delete from s3 then delete the container:
         -e SECRET_KEY=myawssecret \
         -e S3_PATH=s3://my-bucket/backup/ \
         istepanov/backup-to-s3 delete
+
+Security considerations: on restore, this opens up permissions on the restored files widely.
