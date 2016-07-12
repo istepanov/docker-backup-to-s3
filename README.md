@@ -49,3 +49,11 @@ Run once to delete from s3 then delete the container:
         -e SECRET_KEY=myawssecret \
         -e S3_PATH=s3://my-bucket/backup/ \
         istepanov/backup-to-s3 delete
+
+Run upload to S3 using IAM roles from an EC2 instance, everyday at 12:00pm:
+
+    docker run -d \
+        -e S3_PATH=s3://my-bucket/backup/ \
+        -e 'CRON_SCHEDULE=0 12 * * *' \
+        -v /home/user/data:/data:ro \
+        istepanov/backup-to-s3
