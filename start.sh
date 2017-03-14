@@ -14,11 +14,7 @@ echo "secret_key=$SECRET_KEY" >> /root/.s3cfg
 
 echo "Parameter is $1"
 
-if [[ "$1" == 'server' ]]; then
-    echo "Starting server..."
-    exec /server.py
-
-elif [[ "$1" == 'git' ]]; then
+if [[ "$1" == 'git' ]]; then
     echo "Backing up git repos..."
     : ${GIT_REPO:?"GIT_REPO env variable is required"}
     rm -rf $DATA_PATH
