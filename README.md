@@ -1,11 +1,11 @@
-marcellodesales/sync-volume-to-s3
+marcellodesales/sync-to-s3
 ======================
 
-Docker container that periodically backups files to Amazon S3 using [s3cmd sync](http://s3tools.org/s3cmd-sync) and cron.
+Docker container that can backup files, volumes, git repos directly to Amazon S3 using [s3cmd sync](http://s3tools.org/s3cmd-sync). It can also use a cron job to periodically upload those.
 
 ### Usage
 
-    docker run -d [OPTIONS] marcellodesales/sync-volume-to-s3
+    docker run -d [OPTIONS] marcellodesales/sync-to-s3 start.sh 
 
 ### Parameters:
 
@@ -68,7 +68,32 @@ docker run -ti -e ACCESS_KEY=************
                -v $HOME/.ssh:/root/.ssh backup-s3 no-cron
 ```
 
-Run the clone for a Docker Volume
+## Docker Compose Example
+
+Run the clone for a Docker Volume using Docker-compose.
+
+```yml
+version: "2"
+
+volumes:
+  apks: {}
+
+services:
+  sync:
+    build:
+      context: .
+    volumes:
+      - apks:/apks
+      - ./builds:/apks
+    environment:
+      DATA_PATH: /apks
+      ACCESS_KEY: AK**************HQ
+      SECRET_KEY: 4hC***************6WpYV
+      S3_PATH: s3://my-s3-bucket/test/
+    command: /start.sh wait-sync
+```
+
+Note that the local directory `builds` is mapped to the directory `/apks` from the volume `apks`.
 
 ```
 $ docker-compose up                                          
@@ -92,7 +117,7 @@ and all the files in the current directory is sync'ed with S3.
 ```
 sync_1  | The file 'newfile5' appeared in directory '/apks/' via 'CREATE'
 sync_1  | S3 Bucket Sync: Running the following...
-sync_1  | /usr/local/bin/s3cmd sync  "/apks" "s3://qg-mobile-binary/test/"
+sync_1  | /usr/local/bin/s3cmd sync  "/apks" "s3://my-s3-bucket/test/"
 sync_1  | Files...
 sync_1  | total 8
 sync_1  | drwxr-xr-x  2 root root 4096 Mar 14 08:41 .
@@ -104,15 +129,15 @@ sync_1  | -rw-r--r--  1 root root    0 Mar 14 08:40 newfile4
 sync_1  | -rw-r--r--  1 root root    0 Mar 14 08:41 newfile5
 sync_1  | 
 sync_1  | Job started: Tue Mar 14 08:41:03 UTC 2017
-sync_1  | upload: '/apks/newfile' -> 's3://qg-mobile-binary/test/apks/newfile'  [1 of 5]
+sync_1  | upload: '/apks/newfile' -> 's3://my-s3-bucket/test/apks/newfile'  [1 of 5]
  0 of 0     0% in    0s     0.00 B/s  done
-sync_1  | upload: '/apks/newfile2' -> 's3://qg-mobile-binary/test/apks/newfile2'  [2 of 5]
+sync_1  | upload: '/apks/newfile2' -> 's3://my-s3-bucket/test/apks/newfile2'  [2 of 5]
  0 of 0     0% in    0s     0.00 B/s  done
-sync_1  | upload: '/apks/newfile3' -> 's3://qg-mobile-binary/test/apks/newfile3'  [3 of 5]
+sync_1  | upload: '/apks/newfile3' -> 's3://my-s3-bucket/test/apks/newfile3'  [3 of 5]
  0 of 0     0% in    0s     0.00 B/s  done
-sync_1  | upload: '/apks/newfile4' -> 's3://qg-mobile-binary/test/apks/newfile4'  [4 of 5]
+sync_1  | upload: '/apks/newfile4' -> 's3://my-s3-bucket/test/apks/newfile4'  [4 of 5]
  0 of 0     0% in    0s     0.00 B/s  done
-sync_1  | upload: '/apks/newfile5' -> 's3://qg-mobile-binary/test/apks/newfile5'  [5 of 5]
+sync_1  | upload: '/apks/newfile5' -> 's3://my-s3-bucket/test/apks/newfile5'  [5 of 5]
  0 of 0     0% in    0s     0.00 B/s  done
 sync_1  | Job finished: Tue Mar 14 08:41:07 UTC 2017
 dockergitbackuptos3_sync_1 exited with code 0
