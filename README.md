@@ -9,8 +9,8 @@ Docker container that periodically backups files to Amazon S3 using [s3cmd sync]
 
 ### Parameters:
 
-* `-e ACCESS_KEY=<AWS_KEY>`: Your AWS key.
-* `-e SECRET_KEY=<AWS_SECRET>`: Your AWS secret.
+* `-e ACCESS_KEY=<AWS_KEY>`: Your AWS key.  Will use credentials from the IAM role assigned to this instance if running in AWS.
+* `-e SECRET_KEY=<AWS_SECRET>`: Your AWS secret.   Will use credentials from the IAM role assigned to this instance if running in AWS.
 * `-e S3_PATH=s3://<BUCKET_NAME>/<PATH>/`: S3 Bucket name and path. Should end with trailing slash.
 * `-v /path/to/backup:/data:ro`: mount target local folder to container's data folder. Content of this folder will be synced with S3 bucket.
 
