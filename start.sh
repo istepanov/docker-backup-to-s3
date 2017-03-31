@@ -1,5 +1,23 @@
 #!/bin/bash
 
+instance_id=`curl --max-time 2 http://169.254.169.254/latest/meta-data/instance-id/`
+if [ "$instance_id" != "" ]; then
+    echo "Running in AWS will use IAM role for S3 credentials if instance has an IAM role"
+    instance_profile=`curl --max-time 2 http://169.254.169.254/latest/meta-data/iam/security-credentials/`
+    if [[ -z $ACCESS_KEY && "$instance_profile" != "" ]]; then
+        aws_access_key_id=`curl http://169.254.169.254/latest/meta-data/iam/security-credentials/${instance_profile} | grep AccessKeyId | cut -d':' -f2 | sed 's/[^0-9A-Z]*//g'`
+        export ACCESS_KEY=${aws_access_key_id}
+    fi
+
+    if [[ -z $SECRET_KEY && "$instance_profile" != "" ]]; then
+        aws_secret_access_key=`curl http://169.254.169.254/latest/meta-data/iam/security-credentials/${instance_profile} | grep SecretAccessKey | cut -d':' -f2 | sed 's/[^0-9A-Za-z/+=]*//g'`
+        export SECRET_KEY=${aws_secret_access_key}
+    fi
+else
+    echo "Not running in AWS so ACCESS_KEY and SECRET_KEY must be specified"
+fi
+
+
 set -e
 
 : ${ACCESS_KEY:?"ACCESS_KEY env variable is required"}
