@@ -1,6 +1,11 @@
 istepanov/backup-to-s3
 ======================
 
+[![Docker Stars](https://img.shields.io/docker/stars/istepanov/backup-to-s3.svg)](https://hub.docker.com/r/istepanov/backup-to-s3/)
+[![Docker Pulls](https://img.shields.io/docker/pulls/istepanov/backup-to-s3.svg)](https://hub.docker.com/r/istepanov/backup-to-s3/)
+[![Docker Build](https://img.shields.io/docker/automated/istepanov/backup-to-s3.svg)](https://hub.docker.com/r/istepanov/backup-to-s3/)
+[![Layers](https://images.microbadger.com/badges/image/istepanov/backup-to-s3.svg)](https://microbadger.com/images/istepanov/backup-to-s3)
+
 Docker container that periodically backups files to Amazon S3 using [s3cmd sync](http://s3tools.org/s3cmd-sync) and cron.
 
 ### Usage
