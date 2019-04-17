@@ -2,14 +2,16 @@
 
 set -e
 
-: ${ACCESS_KEY:?"ACCESS_KEY env variable is required"}
-: ${SECRET_KEY:?"SECRET_KEY env variable is required"}
 : ${S3_PATH:?"S3_PATH env variable is required"}
 export DATA_PATH=${DATA_PATH:-/data/}
 CRON_SCHEDULE=${CRON_SCHEDULE:-0 1 * * *}
 
-echo "access_key=$ACCESS_KEY" >> /root/.s3cfg
-echo "secret_key=$SECRET_KEY" >> /root/.s3cfg
+if [[ -n "$ACCESS_KEY"  &&  -n "$SECRET_KEY" ]]; then
+    echo "access_key=$ACCESS_KEY" >> /root/.s3cfg
+    echo "secret_key=$SECRET_KEY" >> /root/.s3cfg
+else
+    echo "No ACCESS_KEY and SECRET_KEY env variable found, assume use of IAM"
+fi
 
 if [[ "$1" == 'no-cron' ]]; then
     exec /sync.sh
