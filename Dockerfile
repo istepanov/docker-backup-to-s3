@@ -1,9 +1,10 @@
-FROM debian:jessie
-MAINTAINER Ilya Stepanov <dev@ilyastepanov.com>
+FROM debian:bullseye
 
 RUN apt-get update && \
-    apt-get install -y python python-pip cron && \
+    apt-get install -y python2 curl cron && \
     rm -rf /var/lib/apt/lists/*
+
+RUN curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output /get-pip.py && python2 /get-pip.py
 
 RUN pip install s3cmd
 
